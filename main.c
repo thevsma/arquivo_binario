@@ -18,7 +18,7 @@ Aluno digitarAluno() {
     return a;
 }
 
-void imprimirAlunos(FILE* fp) {
+void imprimirTodos(FILE* fp) {
     Aluno aux;
     fseek(fp, 0, SEEK_SET);
     printf("Matricula          Nome                      Media\n");
@@ -41,12 +41,17 @@ Aluno buscarAluno(FILE* fp) {
     fseek(fp, 0, SEEK_SET);
     while (fread(&aux, sizeof(Aluno), 1, fp)) {
         if (aux.matricula == mAux) {
-            fseek(fp, -sizeof(Aluno), SEEK_CUR);
+            fseek(fp, -(long)sizeof(Aluno), SEEK_CUR);
             return aux;
         }
     }
     printf("Aluno nao encontrado!\n");
     return aux;
+}
+
+void imprimirAluno(Aluno a) {
+    printf("Matricula          Nome                      Media\n");
+    printf("%-18d %-25s %-5.2f\n", a.matricula, a.nome, a.media);
 }
 
 int main() {
@@ -60,6 +65,8 @@ int main() {
     }
 
     int opcao = 0;
+    printf("1. Cadastrar aluno;\n2. Listar todos os alunos;\n3. Buscar aluno pela matricula;\n4. Sair.\n");
+    printf("Digite sua opcao: ");
     scanf("%d", &opcao);
 
     while (opcao != 4) {
@@ -68,19 +75,21 @@ int main() {
                 inserirAluno(digitarAluno(), fp);
                 break;
             case 2:
-                imprimirAlunos(fp);
+                imprimirTodos(fp);
                 break;
             case 3:
                 Aluno a;
                 a = buscarAluno(fp);
-                printf("Matricula          Nome                      Media\n");
-                printf("%-18d %-25s %-5.2f\n", a.matricula, a.nome, a.media);
+                imprimirAluno(a);
                 break;
             case 4:
                 break;
             default:
                 printf("Opcao invalida\n");
         }
+        printf("\n");
+        printf("1. Cadastrar aluno;\n2. Listar todos os alunos;\n3. Buscar aluno pela matricula;\n4. Sair.\n");
+        printf("Digite sua opcao: ");
         scanf("%d", &opcao);
     }
 
