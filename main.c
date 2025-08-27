@@ -33,6 +33,22 @@ void inserirAluno(Aluno a, FILE* fp){
     printf("Aluno adicionado!\n");
 }
 
+Aluno buscarAluno(FILE* fp) {
+    Aluno aux;
+    int mAux;
+    printf("Digite a matricula do aluno que deseja buscar: ");
+    scanf("%d", &mAux);
+    fseek(fp, 0, SEEK_SET);
+    while (fread(&aux, sizeof(Aluno), 1, fp)) {
+        if (aux.matricula == mAux) {
+            fseek(fp, -sizeof(Aluno), SEEK_CUR);
+            return aux;
+        }
+    }
+    printf("Aluno nao encontrado!\n");
+    return aux;
+}
+
 int main() {
     FILE* fp;
 
@@ -53,6 +69,12 @@ int main() {
                 break;
             case 2:
                 imprimirAlunos(fp);
+                break;
+            case 3:
+                Aluno a;
+                a = buscarAluno(fp);
+                printf("Matricula          Nome                      Media\n");
+                printf("%-18d %-25s %-5.2f\n", a.matricula, a.nome, a.media);
                 break;
             case 4:
                 break;
